@@ -16,6 +16,6 @@ python fortune_teller_fixed.py
 
 github: https://github.com/dsamanta12344/coding-best-practices-activity
 
-I didn't have a partner so I just did both versions. I still used branches and pull requests for the bonus.
+I used branches and pull requests for the bonus.
 
 Deb Samanta
