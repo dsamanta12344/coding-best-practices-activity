@@ -1,87 +1,75 @@
-# fortune teller program
-# Author: me
-# Last updated: 2019 (this date is wrong on purpose)
-# This file creates fortunes for people who use the program.
-# This file also gets input from the user.
-# This file also prints stuff.
-# This file also validates months.
-# Changelog:
-# - added fortunes
-# - added more fortunes
-# - removed database because we never needed a database
-# - added print statements
+# Fortune Teller
+# Deb Samanta
+# 9/18/26
+# this program tells your fortune based on your name and birthday
+# I was gonna connect it to a website but I didnt have time
 
 import random
 
-# global variables we will use everywhere
 n = ""
 m = 0
 num = 0
-# unused leftover from an old idea
-database_url = "http://localhost:9999/fortunes"
+# leftover from when I thought I needed a database
+url = "http://localhost:3000/fortunes"
 
 
 def get_name():
     # this function gets the name
     global n
-    print("==============================")
-    print(" WELCOME TO THE FORTUNE BOOTH ")
-    print("==============================")
+    print("====================")
+    print(" FORTUNE TELLER")
+    print("====================")
     # ask for name
     x = input("What is your name? ")
     # strip spaces
     x = x.strip()
-    # if empty, ask again
+    # if they hit enter with nothing
     if x == "":
-        # empty string
         x = input("What is your name? ")
         x = x.strip()
         if x == "":
-            x = "Friend"
-    # add 1 to nothing (leftover debug)
+            x = "User"
+    # print(x)
     # i = i + 1
-    # print("debug name=", x)
     n = x
-    # returns the visitor's age
+    # returns the age
     return x
 
 
 def love_fortune():
-    # love fortune function that does love fortunes
-    global n, m, num
-    print("------------------------------")
-    print("Love reading")
-    print("------------------------------")
-    # ask month again because we do not reuse the earlier value
-    month_text = input("Birth month (1-12 or name): ")
-    month_text = month_text.strip().lower()
-    if month_text == "1" or month_text == "january":
+    # love fortune
+    global n
+    global m
+    global num
+    print("----- love -----")
+    month = input("Birth month (1-12 or name): ")
+    month = month.strip().lower()
+    if month == "1" or month == "january":
         m = 1
-    elif month_text == "2" or month_text == "february":
+    elif month == "2" or month == "february":
         m = 2
-    elif month_text == "3" or month_text == "march":
+    elif month == "3" or month == "march":
         m = 3
-    elif month_text == "4" or month_text == "april":
+    elif month == "4" or month == "april":
         m = 4
-    elif month_text == "5" or month_text == "may":
+    elif month == "5" or month == "may":
         m = 5
-    elif month_text == "6" or month_text == "june":
+    elif month == "6" or month == "june":
         m = 6
-    elif month_text == "7" or month_text == "july":
+    elif month == "7" or month == "july":
         m = 7
-    elif month_text == "8" or month_text == "august":
+    elif month == "8" or month == "august":
         m = 8
-    elif month_text == "9" or month_text == "september":
+    elif month == "9" or month == "september":
         m = 9
-    elif month_text == "10" or month_text == "october":
+    elif month == "10" or month == "october":
         m = 10
-    elif month_text == "11" or month_text == "november":
+    elif month == "11" or month == "november":
         m = 11
-    elif month_text == "12" or month_text == "december":
+    elif month == "12" or month == "december":
         m = 12
     else:
-        # default month is 6 because that is my birthday
-        m = 6
+        m = 1
 
     lucky = input("Lucky number: ")
     try:
@@ -89,55 +77,52 @@ def love_fortune():
     except:
         num = 7
 
-    # copy-pasted fortune picker
     lines = []
-    lines.append("Someone from your past will text at the worst possible time.")
-    lines.append("A quiet kindness will matter more than a grand gesture.")
-    lines.append("Stop rewriting the same argument in your head. Say it once.")
-    lines.append("The right person will like the version of you that is not performing.")
-    # pick a random one using month and number for no documented reason
-    idx = (m + num) % 4
+    lines.append("Someone you already know likes you more than you think.")
+    lines.append("Don't text your ex this week.")
+    lines.append("You will have a good conversation with a stranger.")
+    lines.append("Stop overthinking it.")
+    i = (m + num) % 4
     # print the fortune
-    print(n + ", your love fortune:")
-    print(lines[idx])
-    # return unused value
-    return lines[idx]
+    print(n + ", love fortune:")
+    print(lines[i])
+    return lines[i]
 
 
 def job_fortune():
-    # this is the job one, same as love but for jobs
-    global n, m, num
-    print("------------------------------")
-    print("Career reading")
-    print("------------------------------")
-    month_text = input("Birth month (1-12 or name): ")
-    month_text = month_text.strip().lower()
-    if month_text == "1" or month_text == "january":
+    # career one (copied from love and changed the list)
+    global n
+    global m
+    global num
+    print("----- career -----")
+    month = input("Birth month (1-12 or name): ")
+    month = month.strip().lower()
+    if month == "1" or month == "january":
         m = 1
-    elif month_text == "2" or month_text == "february":
+    elif month == "2" or month == "february":
         m = 2
-    elif month_text == "3" or month_text == "march":
+    elif month == "3" or month == "march":
         m = 3
-    elif month_text == "4" or month_text == "april":
+    elif month == "4" or month == "april":
         m = 4
-    elif month_text == "5" or month_text == "may":
+    elif month == "5" or month == "may":
         m = 5
-    elif month_text == "6" or month_text == "june":
+    elif month == "6" or month == "june":
         m = 6
-    elif month_text == "7" or month_text == "july":
+    elif month == "7" or month == "july":
         m = 7
-    elif month_text == "8" or month_text == "august":
+    elif month == "8" or month == "august":
         m = 8
-    elif month_text == "9" or month_text == "september":
+    elif month == "9" or month == "september":
         m = 9
-    elif month_text == "10" or month_text == "october":
+    elif month == "10" or month == "october":
         m = 10
-    elif month_text == "11" or month_text == "november":
+    elif month == "11" or month == "november":
         m = 11
-    elif month_text == "12" or month_text == "december":
+    elif month == "12" or month == "december":
         m = 12
     else:
-        m = 6
+        m = 1
 
     lucky = input("Lucky number: ")
     try:
@@ -146,81 +131,77 @@ def job_fortune():
         num = 7
 
     lines = []
-    lines.append("A small skill you keep skipping will unlock the next step.")
-    lines.append("Say no to one extra task this week. Protect the work that matters.")
-    lines.append("Ask the question you have been rehearsing in the hallway.")
-    lines.append("Your next win comes from finishing, not from starting something new.")
-    idx = (m + num) % 4
-    print(n + ", your career fortune:")
-    print(lines[idx])
-    return lines[idx]
+    lines.append("Finish the assignment you keep putting off.")
+    lines.append("A group project will actually be fine for once.")
+    lines.append("Ask the question in class.")
+    lines.append("Coffee will save you this week.")
+    i = (m + num) % 4
+    print(n + ", career fortune:")
+    print(lines[i])
+    return lines[i]
 
 
 def luck_fortune():
     # luck
     global n, m, num
-    print("------------------------------")
-    print("Luck reading")
-    print("------------------------------")
-    month_text = input("Birth month (1-12 or name): ")
-    month_text = month_text.strip().lower()
-    if month_text == "1" or month_text == "january":
+    print("----- luck -----")
+    month = input("what month were you born? ")
+    month = month.strip().lower()
+    if month == "1" or month == "january":
         m = 1
-    elif month_text == "2" or month_text == "february":
+    elif month == "2" or month == "february":
         m = 2
-    elif month_text == "3" or month_text == "march":
+    elif month == "3" or month == "march":
         m = 3
-    elif month_text == "4" or month_text == "april":
+    elif month == "4" or month == "april":
         m = 4
-    elif month_text == "5" or month_text == "may":
+    elif month == "5" or month == "may":
         m = 5
-    elif month_text == "6" or month_text == "june":
+    elif month == "6" or month == "june":
         m = 6
-    elif month_text == "7" or month_text == "july":
+    elif month == "7" or month == "july":
         m = 7
-    elif month_text == "8" or month_text == "august":
+    elif month == "8" or month == "august":
         m = 8
-    elif month_text == "9" or month_text == "september":
+    elif month == "9" or month == "september":
         m = 9
-    elif month_text == "10" or month_text == "october":
+    elif month == "10" or month == "october":
         m = 10
-    elif month_text == "11" or month_text == "november":
+    elif month == "11" or month == "november":
         m = 11
-    elif month_text == "12" or month_text == "december":
+    elif month == "12" or month == "december":
         m = 12
     else:
-        m = 6
+        m = 1
 
-    lucky = input("Lucky number: ")
+    lucky = input("lucky number: ")
     try:
         num = int(lucky)
     except:
         num = 7
 
     lines = []
-    lines.append("Carry a coin in your left pocket. You will need a yes-or-no later.")
-    lines.append("Missed buses are trying to save you from a worse conversation.")
-    lines.append("The lucky number is not magic. It is a reminder to pick a lane.")
-    lines.append("Look up from your phone at 3:17. That is your cue.")
-    idx = (m + num) % 4
-    print(n + ", your luck fortune:")
-    print(lines[idx])
-    return lines[idx]
+    lines.append("Your lucky color is blue.")
+    lines.append("Look for a $5 on the ground.")
+    lines.append("Skip the 3rd notification.")
+    lines.append("If you find a penny keep it.")
+    i = (m + num) % 4
+    print(n + ", luck fortune:")
+    print(lines[i])
+    return lines[i]
 
 
-def do_everything():
-    # MAIN FUNCTION that does everything the other functions did not
+def main():
+    # runs everything
     get_name()
-    # we call three almost identical functions
     love_fortune()
     job_fortune()
     luck_fortune()
-    print("==============================")
-    print("Goodbye " + n)
-    print("==============================")
-    # random leftover code that never runs
-    # save_to_cloud(n, m, num)
-    # send_email(n)
+    print("====================")
+    print("bye " + n)
+    print("====================")
+    # TODO save to a file later
+    # save(n, m, num)
 
 
-do_everything()
+main()

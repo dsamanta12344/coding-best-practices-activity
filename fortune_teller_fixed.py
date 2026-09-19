@@ -1,13 +1,10 @@
-"""Command-line fortune booth.
+# Fortune Teller (good version)
+# Deb Samanta
+# 9/18/26
+# Same program as the other file but I actually used the stuff from lecture.
+# DRY, single responsibility, and comments that aren't useless.
 
-Asks a visitor for a name, birth month, and lucky number, then prints one
-short reading each for love, career, and luck. The same visitor answers are
-reused for every category so the program does not re-ask the same questions.
-"""
-
-from __future__ import annotations
-
-MONTH_NAMES = {
+months = {
     "january": 1,
     "february": 2,
     "march": 3,
@@ -19,123 +16,111 @@ MONTH_NAMES = {
     "september": 9,
     "october": 10,
     "november": 11,
-    "december": 12,
+    "december": 12
 }
 
-LOVE_LINES = (
-    "Someone from your past will text at the worst possible time.",
-    "A quiet kindness will matter more than a grand gesture.",
-    "Stop rewriting the same argument in your head. Say it once.",
-    "The right person will like the version of you that is not performing.",
-)
+love_fortunes = [
+    "Someone you already know likes you more than you think.",
+    "Don't text your ex this week.",
+    "You will have a good conversation with a stranger.",
+    "Stop overthinking it."
+]
 
-CAREER_LINES = (
-    "A small skill you keep skipping will unlock the next step.",
-    "Say no to one extra task this week. Protect the work that matters.",
-    "Ask the question you have been rehearsing in the hallway.",
-    "Your next win comes from finishing, not from starting something new.",
-)
+career_fortunes = [
+    "Finish the assignment you keep putting off.",
+    "A group project will actually be fine for once.",
+    "Ask the question in class.",
+    "Coffee will save you this week."
+]
 
-LUCK_LINES = (
-    "Carry a coin in your left pocket. You will need a yes-or-no later.",
-    "Missed buses are trying to save you from a worse conversation.",
-    "The lucky number is not magic. It is a reminder to pick a lane.",
-    "Look up from your phone at 3:17. That is your cue.",
-)
-
-
-def prompt_nonempty(label: str) -> str:
-    """Keep asking until the visitor types something other than whitespace."""
-    while True:
-        text = input(label).strip()
-        if text:
-            return text
-        print("Please type a response.")
+luck_fortunes = [
+    "Your lucky color is blue.",
+    "Look for a $5 on the ground.",
+    "Skip the 3rd notification.",
+    "If you find a penny keep it."
+]
 
 
-def parse_month(text: str) -> int | None:
-    """Turn a month name or 1-12 into an integer month, or None if invalid."""
-    cleaned = text.strip().lower()
-    if cleaned in MONTH_NAMES:
-        return MONTH_NAMES[cleaned]
-    if cleaned.isdigit():
-        value = int(cleaned)
-        if 1 <= value <= 12:
-            return value
+def get_name():
+    """Asks for a name and keeps asking if they leave it blank."""
+    name = input("What is your name? ").strip()
+    while name == "":
+        name = input("Please enter a name: ").strip()
+    return name
+
+
+def month_to_number(text):
+    """Takes january or 3 or whatever and returns 1-12. Returns None if its not a month."""
+    text = text.strip().lower()
+    if text in months:
+        return months[text]
+    if text.isdigit():
+        n = int(text)
+        if n >= 1 and n <= 12:
+            return n
     return None
 
 
-def prompt_month() -> int:
-    """Ask for a birth month until the visitor gives a usable value."""
+def get_month():
+    """Gets the birth month."""
     while True:
-        parsed = parse_month(input("Birth month (1-12 or name): "))
-        if parsed is not None:
-            return parsed
-        print("Please enter a month name or a number from 1 to 12.")
+        ans = input("Birth month (name or 1-12): ")
+        num = month_to_number(ans)
+        if num != None:
+            return num
+        print("That's not a month, try again.")
 
 
-def prompt_lucky_number() -> int:
-    """Ask for a whole number until the visitor gives one."""
+def get_lucky_number():
+    """Gets a lucky number. Has to be an int."""
     while True:
-        raw = input("Lucky number: ").strip()
+        ans = input("Lucky number: ")
         try:
-            return int(raw)
+            return int(ans)
         except ValueError:
-            print("Please enter a whole number, such as 7.")
+            print("Please enter a number.")
 
 
-def choose_line(lines: tuple[str, ...], seed: int) -> str:
-    """Pick one line from a pool using a stable seed.
-
-    The seed is built from the visitor's month and lucky number so the same
-    person gets the same reading if they run the program twice.
-    """
-    return lines[seed % len(lines)]
+def pick_fortune(fortunes, seed):
+    # % so if you put the same month + lucky number you get the same fortune again
+    return fortunes[seed % len(fortunes)]
 
 
-def collect_visitor() -> tuple[str, int, int]:
-    """Collect the three answers needed to build a reading."""
-    print("==============================")
-    print(" WELCOME TO THE FORTUNE BOOTH ")
-    print("==============================")
-    name = prompt_nonempty("What is your name? ")
-    month = prompt_month()
-    lucky_number = prompt_lucky_number()
-    return name, month, lucky_number
+def get_info():
+    """Gets name, month, and lucky number. Doesn't pick fortunes."""
+    print("====================")
+    print(" FORTUNE TELLER")
+    print("====================")
+    name = get_name()
+    month = get_month()
+    lucky = get_lucky_number()
+    return name, month, lucky
 
 
-def build_reading(month: int, lucky_number: int) -> dict[str, str]:
-    """Choose one line for each category from the shared visitor answers."""
-    seed = month + lucky_number
-    return {
-        "love": choose_line(LOVE_LINES, seed),
-        "career": choose_line(CAREER_LINES, seed),
-        "luck": choose_line(LUCK_LINES, seed),
-    }
+def make_fortunes(month, lucky):
+    """Picks the 3 fortunes using the month and lucky number we already have."""
+    seed = month + lucky
+    love = pick_fortune(love_fortunes, seed)
+    career = pick_fortune(career_fortunes, seed)
+    luck = pick_fortune(luck_fortunes, seed)
+    return love, career, luck
 
 
-def print_reading(name: str, reading: dict[str, str]) -> None:
-    """Display the finished reading. Does not collect input or pick lines."""
-    sections = (
-        ("Love reading", reading["love"]),
-        ("Career reading", reading["career"]),
-        ("Luck reading", reading["luck"]),
-    )
-    for title, line in sections:
-        print("------------------------------")
-        print(title)
-        print("------------------------------")
-        print(f"{name}, your {title.split()[0].lower()} fortune:")
-        print(line)
-    print("==============================")
-    print(f"Goodbye {name}")
-    print("==============================")
+def print_fortunes(name, love, career, luck):
+    """Just prints the reading, doesn't ask for anything."""
+    print("------------------------------")
+    print("Ok " + name + ", here's your reading")
+    print("Love: " + love)
+    print("Career: " + career)
+    print("Luck: " + luck)
+    print("------------------------------")
+    print("bye " + name)
 
 
-def main() -> None:
-    name, month, lucky_number = collect_visitor()
-    reading = build_reading(month, lucky_number)
-    print_reading(name, reading)
+def main():
+    name, month, lucky = get_info()
+    love, career, luck = make_fortunes(month, lucky)
+    print_fortunes(name, love, career, luck)
 
 
 if __name__ == "__main__":
